@@ -1,7 +1,8 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, type HTMLMotionProps, type Transition } from "framer-motion";
 import Link from "next/link";
 import { ProjectGalleryClient } from "./ProjectGalleryClient";
+import { MotionGallery } from "./MotionGallery";
 
 type Item = { src: string; type: "image" | "video"; name: string };
 
@@ -12,15 +13,16 @@ interface Props {
   description?: string;
   poster?: string;
   items: Item[];
+  layout?: "lightbox" | "grid";
 }
 
-const textEnter = (delay: number) => ({
+const textEnter = (delay: number): Pick<HTMLMotionProps<"div">, "initial" | "animate" | "transition"> => ({
   initial: { filter: "blur(10px)", opacity: 0, y: 20 },
   animate: { filter: "blur(0px)", opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: "easeOut", delay },
+  transition: { duration: 0.5, ease: "easeOut", delay } as Transition,
 });
 
-export function ProjectGalleryView({ title, subtitle, year, description, poster, items }: Props) {
+export function ProjectGalleryView({ title, subtitle, year, description, poster, items, layout = "lightbox" }: Props) {
   return (
     <div className="grid-bg" style={{ height: "100dvh", overflow: "auto", background: "var(--background-1)", color: "var(--label-1)" }}>
       <header
@@ -60,8 +62,7 @@ export function ProjectGalleryView({ title, subtitle, year, description, poster,
               {...textEnter(0.1)}
               style={{ fontSize: "0.75rem", opacity: 0.6, fontFamily: "var(--font-mono-2)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: "1rem" }}
             >
-              {year || "Selected Work"}
-              {subtitle && ` · ${subtitle}`}
+              {`${year || "Selected Work"}${subtitle ? ` · ${subtitle}` : ""}`}
             </motion.div>
             <motion.h1
               {...textEnter(0.25)}
@@ -92,6 +93,8 @@ export function ProjectGalleryView({ title, subtitle, year, description, poster,
           <div style={{ padding: "4rem", textAlign: "center", opacity: 0.5, fontFamily: "var(--font-mono-2)" }}>
             暂无作品素材
           </div>
+        ) : layout === "grid" ? (
+          <MotionGallery items={items} />
         ) : (
           <ProjectGalleryClient items={items} poster={poster} />
         )}

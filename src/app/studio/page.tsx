@@ -1,15 +1,17 @@
 "use client";
 import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Transition } from "framer-motion";
 import { FadingVideo } from "@/components/FadingVideo";
 import { BlurText } from "@/components/BlurText";
 import * as Icons from "@/components/Icons";
+
+const baseTransition: Transition = { duration: 0.5, ease: "easeOut" };
 
 const sharedMotionProps = {
   initial: { filter: "blur(10px)", opacity: 0, y: 20 },
   animate: { filter: "blur(0px)", opacity: 1, y: 0 },
   exit: { filter: "blur(10px)", opacity: 0, y: -20 },
-  transition: { duration: 0.5, ease: "easeOut" },
+  transition: baseTransition,
 };
 
 export default function StudioPage() {

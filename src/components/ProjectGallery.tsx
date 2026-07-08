@@ -9,6 +9,9 @@ interface Props {
   year?: string;
   description?: string;
   poster?: string;
+  /** "lightbox" = single full-screen with prev/next (default)
+   *  "grid"     = 50x50 thumbnail grid, hover-to-play (videos) or hover-zoom (images) */
+  layout?: "lightbox" | "grid";
 }
 
 const VIDEO_EXT = new Set([".mp4", ".webm", ".mov"]);
@@ -26,14 +29,20 @@ function listMedia(folder: string) {
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 }
 
-export function ProjectGallery({ folder, title, subtitle, year, description, poster }: Props) {
+export function ProjectGallery({ folder, title, subtitle, year, description, poster, layout = "lightbox" }: Props) {
   const files = listMedia(folder);
 
-  const items = files.map((file) => {
-    const ext = path.extname(file).toLowerCase();
-    const src = `/works/${folder}/${encodeURIComponent(file)}`;
-    return { src, type: VIDEO_EXT.has(ext) ? ("video" as const) : ("image" as const), name: file };
-  });
+  // Grid layouts (motion page, etc.) only support videos — hide static images
+  // like poster.png from the thumbnail strip.
+  const allowedExts = layout === "grid" ? VIDEO_EXT : new Set([...VIDEO_EXT, ...IMAGE_EXT]);
+
+  const items = files
+    .filter((f) => allowedExts.has(path.extname(f).toLowerCase()))
+    .map((file) => {
+      const ext = path.extname(file).toLowerCase();
+      const src = `/works/${folder}/${encodeURIComponent(file)}`;
+      return { src, type: VIDEO_EXT.has(ext) ? ("video" as const) : ("image" as const), name: file };
+    });
 
   return (
     <ProjectGalleryView
@@ -43,6 +52,7 @@ export function ProjectGallery({ folder, title, subtitle, year, description, pos
       description={description}
       poster={poster}
       items={items}
+      layout={layout}
     />
   );
 }

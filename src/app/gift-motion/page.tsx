@@ -7,7 +7,8 @@ export default function GiftMotion() {
       title="礼物动效"
       subtitle="Gift Motion Design"
       year="2025"
-      description="礼物相关动效设计，短视频与 UI 动效的创意结合。"
+      description="礼物相关动效设计，短视频与 UI 动效的创意结合。悬停缩略图即可预览对应动效。"
+      layout="grid"
     />
   );
 }
