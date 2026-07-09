@@ -194,6 +194,7 @@ export function HeroCallToAction() {
         Selected Work ↓
       </Link>
       <span
+        className="hero-cursor-hint"
         style={{
           fontSize: "0.75rem",
           opacity: 0.6,

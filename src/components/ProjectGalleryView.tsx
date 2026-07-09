@@ -3,6 +3,7 @@ import { motion, type HTMLMotionProps, type Transition } from "framer-motion";
 import Link from "next/link";
 import { ProjectGalleryClient } from "./ProjectGalleryClient";
 import { MotionGallery } from "./MotionGallery";
+import { SiteBackground } from "./SiteBackground";
 
 type Item = { src: string; type: "image" | "video"; name: string };
 
@@ -24,7 +25,10 @@ const textEnter = (delay: number): Pick<HTMLMotionProps<"div">, "initial" | "ani
 
 export function ProjectGalleryView({ title, subtitle, year, description, poster, items, layout = "lightbox" }: Props) {
   return (
-    <div className="grid-bg" style={{ height: "100dvh", overflow: "auto", background: "var(--background-1)", color: "var(--label-1)" }}>
+    <div style={{ height: "100dvh", overflow: "auto", position: "relative" }}>
+      <SiteBackground />
+
+      {/* Back link & title — floats above everything */}
       <header
         style={{
           position: "fixed",
@@ -70,7 +74,7 @@ export function ProjectGalleryView({ title, subtitle, year, description, poster,
                 fontWeight: 700,
                 textTransform: "uppercase",
                 lineHeight: 1,
-                fontSize: "clamp(3rem, 8vw, 7.2vw)",
+                fontSize: "clamp(2.5rem, 8vw, 7rem)",
                 fontVariationSettings: '"wdth" 120',
                 color: "#fff",
                 marginBottom: "1rem",

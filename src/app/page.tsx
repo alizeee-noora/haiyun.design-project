@@ -5,7 +5,11 @@ import { SignSvg } from "@/components/SignSvg";
 import { WorkCard } from "@/components/WorkCard";
 import { StickyBanner } from "@/components/StickyBanner";
 import { HeroOrb, HeroCallToAction } from "@/components/HeroOrb";
-import { PortraitCard } from "@/components/PortraitCard";
+import { HeroRoller } from "@/components/HeroRoller";
+import { TypewriterText } from "@/components/TypewriterText";
+import { SiteBackground } from "@/components/SiteBackground";
+import { PortraitLabel } from "@/components/PortraitLabel";
+import { ContactFooter } from "@/components/ContactFooter";
 
 const WORKS = [
   { title: "甜品小镇", subtitle: "Sweet Town · Game UI", href: "/game-sweet-town", year: "2024", tag: "Game UI", tagEn: "Sweet Town", poster: "/works/sweet-town/poster.png" },
@@ -22,17 +26,44 @@ const WORKS = [
   { title: "海报", subtitle: "Poster Design", href: "/poster", year: "2024-2025", tag: "Print", tagEn: "Poster", poster: "/works/poster/poster.png" },
 ];
 
-const PAD_X = "clamp(1rem, 3.5rem, 3.5rem)";
-const PAD_Y = "clamp(2rem, 4.5rem, 6rem)";
+const PAD_X = "clamp(1.5rem, 4rem, 4rem)";
+const PAD_Y = "clamp(2rem, 5rem, 7rem)";
+
+/** ms to type each line */
+const SPEED = 55;
+
+function heroLine(text: string, startDelay: number) {
+  return (
+    <div style={{ overflow: "hidden", lineHeight: 1 }}>
+      <TypewriterText
+        text={text}
+        speed={SPEED}
+        startDelay={startDelay}
+        className="hero-typewriter"
+      />
+    </div>
+  );
+}
 
 export default function Home() {
+  // Timing for typewriter: each line starts when the previous one finishes
+  // "I craft" = 7 chars, "vision & taste" = 14, "into pixels" = 11
+  const line1End = 0 + 7 * SPEED;
+  const line2Start = line1End + 150;
+  const line2End = line2Start + 14 * SPEED;
+  const line3Start = line2End + 200;
+
   return (
-    <div className="grid-bg" style={{ background: "var(--background-1)", color: "var(--label-1)", minHeight: "100dvh" }}>
+    <div style={{ background: "var(--background-1)", color: "#fff", minHeight: "100dvh" }}>
+      {/* Hero particles (only visible in Hero section via CSS isolation) */}
       <CanvasBackground />
+      {/* Full-bleed background for pages below hero */}
+      <SiteBackground />
       <SiteShell />
 
       <main className="site-main">
         <div className="site-scroll">
+
           {/* ===== Hero ===== */}
           <section style={{
             position: "relative",
@@ -40,8 +71,16 @@ export default function Home() {
             width: "100%",
             minHeight: "100dvh",
             overflow: "hidden",
+            /* Soft fade out the bottom 30% so the hero blends into
+               the SiteBackground dot layer below. */
+            maskImage: "linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%)",
           }}>
-            <HeroOrb baseSrc="/hero/base.png" revealSrc="/hero/revel.png" />
+            {/* Hero orb + particles — contained within hero section */}
+            <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+              <HeroOrb baseSrc="/hero/base.png" revealSrc="/hero/revel.png" />
+              <CanvasBackground />
+            </div>
 
             <div style={{
               position: "relative",
@@ -53,65 +92,150 @@ export default function Home() {
               justifyContent: "space-between",
             }}>
               <FadeIn delay={100}>
-                <div style={{ fontFamily: "var(--font-mono-2)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.18em", opacity: 0.7 }}>
+                <div style={{ fontFamily: "var(--font-mono-2)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.18em", color: "#fff" }}>
                   Haiyun Liu · Visual Designer
                 </div>
               </FadeIn>
 
-              <div style={{ fontWeight: 700, textTransform: "uppercase", lineHeight: 0.9, fontSize: "clamp(3rem, 9vw, 8vw)", fontVariationSettings: '"wdth" 120', color: "#fff" }}>
-                {["I craft", "vision & taste", "into pixels"].map((text, i) => (
-                  <FadeIn key={text} delay={150 + i * 150}>
-                    {text}
-                  </FadeIn>
-                ))}
-              </div>
+              {/* Drum-roll exit on scroll */}
+              <HeroRoller>
+                <div style={{
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  lineHeight: 1.0,
+                  fontSize: "clamp(3rem, 10vw, 9rem)",
+                  fontVariationSettings: '"wdth" 120',
+                  color: "#fff",
+                }}>
+                  {heroLine("I craft", 400)}
+                  {heroLine("vision & taste", line2Start)}
+                  {heroLine("into pixels", line3Start)}
+                </div>
+              </HeroRoller>
             </div>
 
             <HeroCallToAction />
           </section>
 
-          {/* ===== About ===== */}
+          {/* ===== About — left 1/3 portrait + right 2/3 quotes ===== */}
           <section style={{
             display: "grid",
-            gridTemplateColumns: "repeat(12, 1fr)",
+            gridTemplateColumns: "1fr 2fr",
             padding: `${PAD_Y} ${PAD_X}`,
-            paddingBottom: "clamp(2rem, 4.5rem, 7rem)",
-            gap: "0",
+            paddingBottom: "clamp(3rem, 6rem, 8rem)",
+            gap: "clamp(3rem, 5rem, 6rem)",
             width: "100%",
-          }}>
-            {/* Portrait + signature */}
-            <div style={{ gridColumn: "1 / 5", padding: "8px 16px 8px 0", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", gap: "1rem" }}>
-              <PortraitCard />
-              <div style={{ position: "relative", pointerEvents: "none", width: "70%", maxWidth: "220px", marginTop: "0.5rem" }}>
+            alignItems: "start",
+          }} className="about-new-section">
+
+            {/* Left column */}
+            <div className="about-portrait-col">
+              {/* Portrait — haiyun label overlaid inside, resume on hover */}
+              <a
+                href="/about/resume.pdf"
+                download
+                title="下载简历"
+                style={{ display: "block", textDecoration: "none" }}
+              >
+                <div
+                  className="portrait-frame"
+                  style={{
+                    position: "relative",
+                    width: "100%",
+                    aspectRatio: "3 / 4",
+                    overflow: "hidden",
+                    borderRadius: "6px",
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/about/portrait.png"
+                    alt="刘海云"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      display: "block",
+                      filter: "saturate(1.4) brightness(1.05) hue-rotate(10deg)",
+                    }}
+                  />
+
+                  {/* Gradient overlays */}
+                  <div style={{
+                    position: "absolute",
+                    inset: 0,
+                    background: "linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.3) 100%)",
+                    pointerEvents: "none",
+                  }} />
+
+                  {/* Handwritten "haiyun" — inside photo top-left */}
+                  <PortraitLabel />
+
+                  {/* Resume label — centered, pink pill on hover */}
+                  <div className="resume-text-wrap">
+                    <span className="resume-text">简历</span>
+                  </div>
+                </div>
+              </a>
+
+              {/* Signature */}
+              <div style={{ position: "relative", pointerEvents: "none", width: "60%", marginTop: "1.5rem" }}>
                 <SignSvg />
               </div>
             </div>
 
-            {/* About text */}
+            {/* Right: two large quote paragraphs */}
             <div style={{
               display: "flex",
               flexDirection: "column",
-              gap: "1.5rem",
-              gridColumn: "5 / -1",
-              justifyContent: "center",
+              gap: "clamp(2rem, 4rem, 5rem)",
+              paddingTop: "0.5rem",
             }}>
-              <FadeIn delay={150}>
-                <p style={{ fontSize: "clamp(1.1rem, 3vw, 1.5rem)", lineHeight: 1.3, color: "var(--label-1)" }}>
+              <FadeIn delay={100}>
+                <blockquote style={{
+                  fontSize: "clamp(1.4rem, 3.5vw, 2.2rem)",
+                  fontWeight: 600,
+                  lineHeight: 1.2,
+                  color: "#fff",
+                  fontFamily: "var(--font-heading)",
+                  fontStyle: "normal",
+                  margin: 0,
+                  padding: 0,
+                }}>
                   关注视觉语言的延展：从屏幕到空间、从静态到动效，让设计在多媒介之间保持一致的性格与表达。
-                </p>
+                </blockquote>
               </FadeIn>
+
               <FadeIn delay={300}>
-                <p style={{ fontSize: "clamp(1.1rem, 3vw, 1.5rem)", lineHeight: 1.3, color: "var(--label-2)" }}>
+                <blockquote style={{
+                  fontSize: "clamp(1.1rem, 2.5vw, 1.6rem)",
+                  fontWeight: 400,
+                  lineHeight: 1.5,
+                  color: "#fff",
+                  fontStyle: "normal",
+                  margin: 0,
+                  padding: 0,
+                }}>
                   我是{" "}
-                  <span style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationColor: "rgba(255,255,255,0.3)" }}>刘海云</span>
+                  <a
+                    href="https://www.cafa.edu.cn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "4px", textDecorationColor: "rgba(255,255,255,0.25)" }}
+                  >刘海云</a>
                   ，硕士就读于{" "}
-                  <span style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationColor: "rgba(255,255,255,0.3)" }}>中央美术学院</span>
+                  <a
+                    href="https://www.cafa.edu.cn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "4px", textDecorationColor: "rgba(255,255,255,0.25)" }}
+                  >中央美术学院</a>
                   ，本科毕业于山东工艺美术学院{" "}
-                  <span style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "3px", textDecorationColor: "rgba(255,255,255,0.3)" }}>建筑设计</span>
-                  专业，2026 年应届毕业。曾参加{" "}
+                  <span style={{ color: "#fff", textDecoration: "underline", textUnderlineOffset: "4px", textDecorationColor: "rgba(255,255,255,0.25)" }}>建筑设计</span>
+                  {" "}专业，2026 年应届毕业。曾参加{" "}
                   <span style={{ color: "#fff" }}>霍普杯、天作杯</span>
                   {" "}设计竞赛，热衷于把建筑学的空间思维带入 UI、动效与品牌视觉。
-                </p>
+                </blockquote>
               </FadeIn>
             </div>
           </section>
@@ -131,79 +255,11 @@ export default function Home() {
           <StickyBanner />
 
           {/* ===== Contact Footer ===== */}
-          <footer id="contact" style={{
-            position: "relative",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            padding: `${PAD_Y} ${PAD_X}`,
-            width: "100%",
-            minHeight: "100dvh",
-            background: "var(--background-1)",
-            color: "var(--label-1)",
-            zIndex: 10,
-          }}>
-            {[
-              { text: "Let's", align: "left", delay: 100 },
-              { text: "Design", align: "right", delay: 250 },
-              { text: "Something", align: "left", delay: 400 },
-              { text: "With Craft", align: "right", delay: 550 },
-            ].map(({ text, align, delay }) => (
-              <FadeIn key={text} delay={delay}>
-                <div style={{
-                  fontWeight: 700,
-                  textTransform: "uppercase",
-                  lineHeight: 1,
-                  fontSize: "clamp(2.5rem, 7.2vw, 7.2vw)",
-                  fontVariationSettings: '"wdth" 120',
-                  textAlign: align as "left" | "right",
-                  letterSpacing: "-0.02em",
-                  color: "#fff",
-                }}>
-                  {text}
-                </div>
-              </FadeIn>
-            ))}
-
-            <div style={{
-              position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: `${PAD_Y} ${PAD_X}`,
-              display: "flex",
-              flexDirection: "column",
-              gap: "1.5rem",
-              fontFamily: "var(--font-mono-2)",
-              fontSize: "0.875rem",
-            }}>
-              <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", gap: "1rem" }}>
-                <a href="mailto:1950523773@qq.com" className="site-nav-btn nav-pink-hover" style={{ textDecoration: "none" }}>
-                  1950523773@qq.com
-                </a>
-                <a href="tel:13221161752" className="site-nav-btn nav-pink-hover" style={{ textDecoration: "none" }}>
-                  132 2116 1752
-                </a>
-              </div>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "2rem 1rem" }}>
-                {[
-                  ["姓名", "刘海云 · Haiyun Liu"],
-                  ["学校", "中央美术学院 (硕士)"],
-                  ["专业", "建筑设计 · B.Arch"],
-                  ["求职岗位", "平面设计 · UI 设计"],
-                ].map(([k, v]) => (
-                  <div key={k}>
-                    <div style={{ fontSize: "0.7em", textTransform: "uppercase", letterSpacing: "0.1em", opacity: 0.6, color: "var(--label-2)" }}>{k}</div>
-                    <div style={{ marginTop: "4px", color: "#fff" }}>{v}</div>
-                  </div>
-                ))}
-              </div>
-              <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between", textTransform: "uppercase", letterSpacing: "0.1em", fontSize: "0.75em", color: "var(--label-2)", gap: "0.5rem" }}>
-                <span>意向城市 · <span style={{ color: "#fff" }}>北京 / 杭州 / 上海</span></span>
-                <span>&copy; 2026 · 刘海云 · All work shown by permission</span>
-              </div>
-            </div>
-          </footer>
+          <ContactFooter
+            padX={PAD_X}
+            padY={PAD_Y}
+            monoFont="var(--font-mono-2)"
+          />
         </div>
       </main>
     </div>

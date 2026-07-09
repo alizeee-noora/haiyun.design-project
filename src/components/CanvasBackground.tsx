@@ -129,8 +129,15 @@ export function CanvasBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 z-30 pointer-events-none"
-      style={{ display: "block" }}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        zIndex: 2,
+        pointerEvents: "none",
+        display: "block",
+      }}
     />
   );
 }

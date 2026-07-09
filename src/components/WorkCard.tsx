@@ -97,7 +97,7 @@ export function WorkCard({ title, subtitle, href, year, tag, tagEn, poster, exte
           fontSize: "0.7rem",
           letterSpacing: "0.08em",
           textTransform: "uppercase",
-          color: "var(--label-1)",
+          color: "#fff",
         }}
       >
         <span className="truncate">{title}</span>

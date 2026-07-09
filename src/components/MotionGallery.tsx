@@ -134,8 +134,16 @@ function MotionTile({ item, index, onPlay }: { item: Item; index: number; onPlay
   const [thumb, setThumb] = useState<string | null>(null);
   const [hover, setHover] = useState(false);
   const [nativeSize, setNativeSize] = useState<{ w: number; h: number } | null>(null);
+  const [viewportW, setViewportW] = useState(1024);
   const previewRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onResize = () => setViewportW(window.innerWidth);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   // Capture the middle frame of the video exactly once.
   useEffect(() => {
@@ -215,15 +223,17 @@ function MotionTile({ item, index, onPlay }: { item: Item; index: number; onPlay
   const ratio = nativeSize ? nativeSize.w / nativeSize.h : 16 / 9;
   const rawW = nativeSize ? nativeSize.w : PREVIEW_MAX_W;
   const rawH = nativeSize ? nativeSize.h : PREVIEW_MAX_W / ratio;
+  const previewCapW = Math.min(PREVIEW_MAX_W, viewportW - 32);
+  const previewCapH = Math.min(PREVIEW_MAX_H, viewportW * 0.7);
   let displayW = rawW;
   let displayH = rawH;
-  if (displayW > PREVIEW_MAX_W) {
-    const k = PREVIEW_MAX_W / displayW;
+  if (displayW > previewCapW) {
+    const k = previewCapW / displayW;
     displayW *= k;
     displayH *= k;
   }
-  if (displayH > PREVIEW_MAX_H) {
-    const k = PREVIEW_MAX_H / displayH;
+  if (displayH > previewCapH) {
+    const k = previewCapH / displayH;
     displayW *= k;
     displayH *= k;
   }

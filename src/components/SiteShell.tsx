@@ -68,11 +68,8 @@ export function SiteShell() {
         </nav>
       </div>
 
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end" }} suppressHydrationWarning>
-        <span className="site-nav-btn" style={{ fontSize: "0.75rem", opacity: 0.7 }} suppressHydrationWarning>
-          北京 CN {time}
-        </span>
-        <span className="site-nav-btn" style={{ fontSize: "0.75rem", opacity: 0.7 }} suppressHydrationWarning>
+      <div className="site-nav-row-bottom" style={{ display: "flex", justifyContent: "center", alignItems: "flex-end" }} suppressHydrationWarning>
+        <span className="site-nav-btn site-nav-coords" style={{ fontSize: "0.75rem", opacity: 0.5 }} suppressHydrationWarning>
           {String(x).padStart(4, "0")} X{" "}
           {String(y).padStart(4, "0")} Y
         </span>
