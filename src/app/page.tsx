@@ -1,8 +1,10 @@
 import { CanvasBackground } from "@/components/CanvasBackground";
 import { SiteShell } from "@/components/SiteShell";
+import { HashScrollOnMount } from "@/components/HashScrollOnMount";
 import { FadeIn } from "@/components/FadeIn";
 import { SignSvg } from "@/components/SignSvg";
 import { WorkCard } from "@/components/WorkCard";
+import { WorkMarquee } from "@/components/WorkMarquee";
 import { StickyBanner } from "@/components/StickyBanner";
 import { HeroOrb, HeroCallToAction } from "@/components/HeroOrb";
 import { HeroRoller } from "@/components/HeroRoller";
@@ -60,6 +62,7 @@ export default function Home() {
       {/* Full-bleed background for pages below hero */}
       <SiteBackground />
       <SiteShell />
+      <HashScrollOnMount />
 
       <main className="site-main">
         <div className="site-scroll">
@@ -193,9 +196,9 @@ export default function Home() {
             }}>
               <FadeIn delay={100}>
                 <blockquote style={{
-                  fontSize: "clamp(1.4rem, 3.5vw, 2.2rem)",
+                  fontSize: "clamp(1.75rem, 4.5vw, 3rem)",
                   fontWeight: 600,
-                  lineHeight: 1.2,
+                  lineHeight: 1.15,
                   color: "#fff",
                   fontFamily: "var(--font-heading)",
                   fontStyle: "normal",
@@ -208,7 +211,7 @@ export default function Home() {
 
               <FadeIn delay={300}>
                 <blockquote style={{
-                  fontSize: "clamp(1.1rem, 2.5vw, 1.6rem)",
+                  fontSize: "clamp(1.4rem, 3.2vw, 2.2rem)",
                   fontWeight: 400,
                   lineHeight: 1.5,
                   color: "#fff",
@@ -240,15 +243,9 @@ export default function Home() {
             </div>
           </section>
 
-          {/* ===== Selected Work ===== */}
+          {/* ===== Selected Work — idle vertical marquee (grid layout preserved) ===== */}
           <section id="selected-work" style={{ padding: `${PAD_Y} ${PAD_X}`, width: "100%" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(12, 1fr)", gap: "0" }}>
-              {WORKS.map((work, i) => (
-                <div key={work.href} className="work-grid-item">
-                  <WorkCard {...work} delay={i * 60} />
-                </div>
-              ))}
-            </div>
+            <WorkMarquee works={WORKS} speed={70} resumeDelay={1200} />
           </section>
 
           {/* ===== Sticky Banner ===== */}

@@ -9,6 +9,25 @@ interface ContactFooterProps {
   monoFont: string;
 }
 
+/** Resolve the page's actual overflow container and smooth-scroll a hash
+ *  target into view. Shared with the header nav so both stay in sync. */
+function scrollToHash(hash: string) {
+  const id = hash.startsWith("#") ? hash.slice(1) : hash;
+  const target = document.getElementById(id);
+  if (!target) return;
+  const scrollContainer =
+    document.querySelector<HTMLElement>(".site-scroll") ??
+    (document.scrollingElement as HTMLElement | null);
+  if (!scrollContainer) {
+    target.scrollIntoView({ behavior: "smooth" });
+    return;
+  }
+  const containerTop = scrollContainer.getBoundingClientRect().top;
+  const targetTop = target.getBoundingClientRect().top;
+  const top = targetTop - containerTop + scrollContainer.scrollTop - 80;
+  scrollContainer.scrollTo({ top, behavior: "smooth" });
+}
+
 /** Contact footer with a typewriter-driven headline that mirrors the hero section. The typewriter chain only mounts once the footer is in view. */
 export function ContactFooter({ padX, padY, monoFont }: ContactFooterProps) {
   const rootRef = useRef<HTMLElement | null>(null);
@@ -63,10 +82,12 @@ export function ContactFooter({ padX, padY, monoFont }: ContactFooterProps) {
         color: "#fff",
         zIndex: 10,
         overflow: "hidden",
-        maskImage:
-          "linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%)",
-        WebkitMaskImage:
-          "linear-gradient(to bottom, transparent 0%, #000 30%, #000 100%)",
+        /* No top mask — the hero video above hands off directly into
+           the contact content here. Previously a transparent top 30%
+           created a black band right where the user looked for the
+           transition. */
+        maskImage: "linear-gradient(to bottom, #000 0%, #000 100%)",
+        WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 100%)",
       }}
     >
       <HeroOrb baseSrc="/hero/base.png" revealSrc="/hero/revel.png" />
@@ -130,6 +151,7 @@ export function ContactFooter({ padX, padY, monoFont }: ContactFooterProps) {
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "space-between",
+            alignItems: "center",
             gap: "1rem",
           }}
         >
@@ -147,6 +169,19 @@ export function ContactFooter({ padX, padY, monoFont }: ContactFooterProps) {
           >
             132 2116 1752
           </a>
+          <button
+            type="button"
+            onClick={() => scrollToHash("#selected-work")}
+            className="site-nav-btn nav-pink-hover"
+            style={{
+              pointerEvents: "auto",
+              fontWeight: 600,
+              letterSpacing: "0.02em",
+            }}
+            aria-label="Scroll back up to the Selected Work section"
+          >
+            ↑ Work
+          </button>
         </div>
         <div
           style={{

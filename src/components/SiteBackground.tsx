@@ -1,4 +1,6 @@
 "use client";
+import { FloatingMotifs } from "./FloatingMotifs";
+
 /**
  * Full-page layered background shared by all non-hero pages.
  * - Blurred background image (60% opacity)
@@ -95,6 +97,8 @@ export function SiteBackground() {
           }}
         />
       ))}
+
+      <FloatingMotifs />
     </div>
   );
 }

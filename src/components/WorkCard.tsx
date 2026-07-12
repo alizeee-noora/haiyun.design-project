@@ -63,10 +63,11 @@ export function WorkCard({ title, subtitle, href, year, tag, tagEn, poster, exte
         {/* Top-right pink English tag */}
         {tagEn && (
           <div
-            className="absolute top-0 right-0 z-10 px-3 py-1.5 bg-[var(--color-pink)] text-black text-[0.65rem] uppercase font-bold leading-none rounded-bl-lg pointer-events-none"
+            className="absolute top-0 z-10 px-3 py-1.5 bg-[var(--color-pink)] text-black text-[0.65rem] uppercase font-bold leading-none rounded-bl-lg pointer-events-none"
             style={{
               fontFamily: "var(--font-mono-2)",
               letterSpacing: "0.12em",
+              right: "30px",
             }}
           >
             {tagEn}
@@ -91,7 +92,7 @@ export function WorkCard({ title, subtitle, href, year, tag, tagEn, poster, exte
 
       {/* Titlebar — outside the overflow-hidden card body, always visible */}
       <div
-        className="mt-3 flex items-center justify-between pointer-events-none"
+        className="mt-2 flex items-center justify-between pointer-events-none"
         style={{
           fontFamily: "var(--font-mono-2)",
           fontSize: "0.7rem",
@@ -115,7 +116,7 @@ export function WorkCard({ title, subtitle, href, year, tag, tagEn, poster, exte
     display: "block",
     textDecoration: "none",
     color: "inherit",
-    padding: "8px",
+    padding: "4px",
     position: "relative",
     cursor: "pointer",
     opacity: visible ? 1 : 0,

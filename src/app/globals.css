@@ -105,7 +105,7 @@ body {
   height: 100%;
 }
 
-/* ===== Grid Background 鈥?fine 3x3 lines ===== */
+/* ===== Grid Background ??fine 3x3 lines ===== */
 .grid-bg {
   background-color: var(--background-1);
   background-image:
@@ -191,7 +191,7 @@ body {
   display: none;
 }
 
-/* ===== Header 鈥?fixed overlay ===== */
+/* ===== Header ??fixed overlay ===== */
 .site-header {
   position: fixed;
   top: 0;
@@ -250,7 +250,10 @@ body {
 /* ===== Work Grid Responsive ===== */
 .work-grid-item {
   grid-column: span 12 / span 12;
-  padding: 8px;
+  padding: 4px;
+  /* Edge-curl rotateX in WorkMarquee applies transform on this wrapper. */
+  transform-origin: center center;
+  will-change: transform;
 }
 @media (max-width: 640px) {
   .work-grid-item {
@@ -321,20 +324,26 @@ body {
   }
 }
 
-/* Video fills the sticky panel — no mask, every frame visible */
-.banner-video {
+/* Sprite-sheet video layer. The 640  65160 source image is
+   scaled by `background-size: cover` so it fills the layer box
+   while keeping the 16:9 frame aspect intact. Each animation
+   frame we update `background-position-y` on this element to
+   -currentFrame  frameH. Frame-scrub is GPU-composited and
+   instantaneous  no decoder seek lag like a <video>. */
+.banner-sprite {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  background-color: var(--background-1);
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  background-size: cover;
   z-index: 0;
-  opacity: 0.75;
-  background: var(--background-1);
-  display: block;
 }
 
-/* Soft top/bottom fades so the entry and exit are seamless */
+/* Top fade only  keeps the entry from the works grid into the
+   hero video soft, but the bottom is a direct hand-off to Contact. */
 .banner-fade-top {
   position: absolute;
   top: 0;
@@ -350,37 +359,8 @@ body {
   pointer-events: none;
 }
 
-.banner-fade-bottom {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 220px;
-  background: linear-gradient(
-    to top,
-    var(--background-1) 0%,
-    transparent 100%
-  );
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Soft feather from banner into Contact */
-#contact::before {
-  content: "";
-  position: absolute;
-  top: -120px;
-  left: 0;
-  right: 0;
-  height: 160px;
-  background: linear-gradient(
-    to top,
-    var(--background-1) 30%,
-    transparent 100%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
+/* .banner-fade-bottom removed  it created a black band where the
+   hero video was masked away just before the Contact section. */
 
 /* ===== Project Gallery (subpages) ===== */
 .gallery-grid {
@@ -436,7 +416,7 @@ body {
   background: var(--accent-gradient);
 }
 
-/* ===== Liquid Glass 鈥?Aeon-style frosted glass ===== */
+/* ===== Liquid Glass ??Aeon-style frosted glass ===== */
 .liquid-glass {
   background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.02) 100%);
   backdrop-filter: blur(20px) saturate(180%);
@@ -457,13 +437,13 @@ body {
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* ===== Typewriter cursor animation — pink accent ===== */
+/* ===== Typewriter cursor animation  pink accent ===== */
 @keyframes typewriterCursor {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
 }
 
-/* ===== 3×3 Grid Backdrop — blueprint with pink accents ===== */
+/* ===== 33 Grid Backdrop  blueprint with pink accents ===== */
 .grid-backdrop {
   position: fixed;
   inset: 0;
@@ -482,7 +462,7 @@ body {
   border-bottom: 1px solid rgba(148, 190, 210, 0.18);
 }
 
-/* Vertical lines — 3 columns */
+/* Vertical lines  3 columns */
 .grid-vline {
   position: absolute;
   top: 0;
@@ -491,7 +471,7 @@ body {
   background: rgba(148, 190, 210, 0.15);
 }
 
-/* Horizontal lines — 3 rows */
+/* Horizontal lines  3 rows */
 .grid-hline {
   position: absolute;
   left: 0;
@@ -500,7 +480,7 @@ body {
   background: rgba(148, 190, 210, 0.15);
 }
 
-/* Intersection dots — pink accent */
+/* Intersection dots  pink accent */
 .grid-dot {
   position: absolute;
   width: 5px;
@@ -518,9 +498,9 @@ body {
   inset: 0;
   pointer-events: none;
   background-image:
-    /* 横线两条 */
+    /* ???? */
     linear-gradient(rgba(148, 190, 210, 0.3) 1px, transparent 1px),
-    /* 竖线两条 */
+    /* ???? */
     linear-gradient(90deg, rgba(148, 190, 210, 0.3) 1px, transparent 1px);
   background-size:
     100% 50%,
@@ -566,7 +546,7 @@ body {
     66.66% 0;
 }
 
-/* Soft corner feather — gently softens the dot density at viewport corners.
+/* Soft corner feather  gently softens the dot density at viewport corners.
    Top/bottom fades are handled inside SiteBackground as full-height
    gradient overlays + section masks. */
 .site-bg-dots {
@@ -598,7 +578,7 @@ body {
   box-shadow: 0 12px 48px rgba(255, 126, 182, 0.18), 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Photo blurs on hover — haiyun label stays sharp via pointer-events:none */
+/* Photo blurs on hover  haiyun label stays sharp via pointer-events:none */
 .portrait-frame img,
 .portrait-frame > div:first-of-type ~ div {
   transition: filter 400ms ease;
@@ -608,7 +588,7 @@ body {
   filter: saturate(1.4) brightness(1.05) hue-rotate(10deg) blur(7px) !important;
 }
 
-/* ===== Resume text — pink pill, centered, hidden until hover ===== */
+/* ===== Resume text  pink pill, centered, hidden until hover ===== */
 .resume-text-wrap {
   position: absolute;
   inset: 0;
@@ -696,4 +676,123 @@ body {
   .dot-pattern-layer {
     display: none;
   }
+}
+
+/* ===== Work Marquee  idle vertical scroll (preserves mosaic grid) ===== */
+.work-marquee {
+  position: relative;
+  width: 100%;
+  /* Tall viewport so many cards are visible at once. Cards continue to
+     scroll upward; the top/bottom mask provides the fade cue. */
+  height: 180vh;
+  min-height: 1200px;
+  overflow: hidden;
+  /* 3D context for the per-card rotateX edge-curl. Wider perspective
+     keeps the curl visible while avoiding strong foreshortening that
+     makes the card look squashed flat. */
+  perspective: 800px;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 120px,
+    #000 calc(100% - 120px),
+    transparent 100%
+  );
+          mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 120px,
+    #000 calc(100% - 120px),
+    transparent 100%
+  );
+}
+
+.work-marquee-track {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  will-change: transform;
+}
+
+@media (max-width: 640px) {
+  /* Smaller mobile workspace: shorter backdrop, tighter fade so the
+     middle band stays usable, and a closer perspective so the rotateX
+     curl still reads at the smaller card scale. */
+  .work-marquee {
+    height: 140vh;
+    min-height: 720px;
+    perspective: 600px;
+  }
+  .work-marquee {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 80px,
+      #000 calc(100% - 80px),
+      transparent 100%
+    );
+            mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 80px,
+      #000 calc(100% - 80px),
+      transparent 100%
+    );
+  }
+}
+
+.work-marquee-set {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
+  flex-shrink: 0;
+}
+
+/* Reduced-motion users see a single static copy of the grid */
+.work-marquee-static .work-marquee-set {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 0;
+}
+
+/* Override the WorkCard's IntersectionObserver-driven fade-in so cards
+   stay visible as they enter the window from below and don't blink
+   every loop. The translate animation itself is the visual cue. */
+.work-marquee a.group {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* Re-apply the mosaic grid-column rules inside each marquee set so the
+   12-column layout works regardless of where the items sit in the parent
+   flex column. Selectors below intentionally have higher specificity than
+   the original `.work-grid-item:nth-child(N)` rules. */
+@media (min-width: 1024px) {
+  .work-marquee-set .work-grid-item:nth-child(1)  { grid-column: 5 / span 8; }
+  .work-marquee-set .work-grid-item:nth-child(2)  { grid-column: 1 / span 8; }
+  .work-marquee-set .work-grid-item:nth-child(3)  { grid-column: 5 / span 6; }
+  .work-marquee-set .work-grid-item:nth-child(4)  { grid-column: 7 / span 6; }
+  .work-marquee-set .work-grid-item:nth-child(5)  { grid-column: 5 / span 4; }
+  .work-marquee-set .work-grid-item:nth-child(6)  { grid-column: 9 / span 4; }
+  .work-marquee-set .work-grid-item:nth-child(7)  { grid-column: 1 / span 4; }
+  .work-marquee-set .work-grid-item:nth-child(8)  { grid-column: 5 / span 4; }
+  .work-marquee-set .work-grid-item:nth-child(9)  { grid-column: 9 / span 4; }
+  .work-marquee-set .work-grid-item:nth-child(10) { grid-column: 1 / span 4; }
+  .work-marquee-set .work-grid-item:nth-child(11) { grid-column: 5 / span 4; }
+  .work-marquee-set .work-grid-item:nth-child(12) { grid-column: 9 / span 4; }
+}
+
+@media (min-width: 1280px) {
+  .work-marquee-set .work-grid-item:nth-child(1)  { grid-column: 5 / span 7; }
+  .work-marquee-set .work-grid-item:nth-child(2)  { grid-column: 1 / span 7; }
+  .work-marquee-set .work-grid-item:nth-child(3)  { grid-column: 6 / span 5; }
+  .work-marquee-set .work-grid-item:nth-child(4)  { grid-column: 7 / span 6; }
+  .work-marquee-set .work-grid-item:nth-child(5)  { grid-column: 6 / span 3; }
+  .work-marquee-set .work-grid-item:nth-child(6)  { grid-column: 10 / span 3; }
+  .work-marquee-set .work-grid-item:nth-child(7)  { grid-column: 1 / span 3; }
+  .work-marquee-set .work-grid-item:nth-child(8)  { grid-column: 5 / span 3; }
+  .work-marquee-set .work-grid-item:nth-child(9)  { grid-column: 9 / span 3; }
+  .work-marquee-set .work-grid-item:nth-child(10) { grid-column: 1 / span 3; }
+  .work-marquee-set .work-grid-item:nth-child(11) { grid-column: 5 / span 3; }
+  .work-marquee-set .work-grid-item:nth-child(12) { grid-column: 9 / span 3; }
 }
