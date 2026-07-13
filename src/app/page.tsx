@@ -245,7 +245,7 @@ export default function Home() {
 
           {/* ===== Selected Work — idle vertical marquee (grid layout preserved) ===== */}
           <section id="selected-work" style={{ padding: `${PAD_Y} ${PAD_X}`, width: "100%" }}>
-            <WorkMarquee works={WORKS} speed={70} resumeDelay={1200} />
+            <WorkMarquee works={WORKS} />
           </section>
 
           {/* ===== Sticky Banner ===== */}
